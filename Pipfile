@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+boto3 = "==1.17.94"
+pytest = "==6.2.5"
+pylint = "==2.11.1"
+jinja2 = "==3.0.1"
+pipenv = "*"
+IPython = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3"
