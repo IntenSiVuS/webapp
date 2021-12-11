@@ -36,7 +36,7 @@ help:
 
 # Setting up the environment before running actual commands by setting a bunch of env variables
 set-env:
-	$(eval VARS:=./input.auto.tfvars)
+	$(eval VARS:=./terraform/input.auto.tfvars)
 	$(eval ENV=$(shell sed 's/\ *=\ */=/g' $(VARS) | awk -F= '/^environment/{ gsub(/"/, "", $$2); print $$2}'))
 	$(eval REGION:=$(shell sed 's/\ *=\ */=/g' $(VARS) | awk -F= '/^region/{ gsub(/"/, "", $$2); print $$2}'))
 	$(eval AWS_PROFILE:=$(shell sed 's/\ *=\ */=/g' $(VARS) | awk -F= '/^aws_profile_tf_deploy/{ gsub(/"/, "", $$2); print $$2}'))
@@ -87,6 +87,7 @@ plan: prep ## Show terraform plan
 apply: prep ## Apply terraform plan
 	$(TERRAFORM) apply \
 		-input=false terraform.plan
+	$(TERRAFORM) output --raw url > output.txt
 
 # The terraform command to destroy the infrastructure. Obviously use it with care.
 destroy: prep ## Destroy terraform only to use for test clusters
@@ -98,7 +99,6 @@ pytest: set-pipenv ## Run pytests
 # Usually i would build the url by using things like <product>.<env>.somedomain.com and use r53 for that
 # but as we cant for free, i grab to url of the lb and let terraform output that to a file
 # which then is used within python 
-	$(TERRAFORM) output --raw url > output.txt
 	$(PIPENV) run pytest -vv --junitxml=$(TEST_DIR)/reports.xml $(TEST_DIR)/*.py
 
 # With this target we will check if the terraform code has been formatted according to standards.
