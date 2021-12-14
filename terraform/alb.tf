@@ -28,7 +28,6 @@ resource "aws_security_group" "webapp_alb_sg" {
 resource "aws_alb" "webapp_alb" {
   name                      = "webapp-alb"
   security_groups           = [aws_security_group.webapp_alb_sg.id]
-  //load_balancer_type        = "application"
   subnets                   = local.subnets
   tags = {
     Name = "webapp-alb"
@@ -58,11 +57,3 @@ resource "aws_alb_listener" "http_listener" {
     type             = "forward"
   }
 }
-
-# target group attach
-# using nested interpolation functions and the count parameter to the "aws_alb_target_group_attachment"
-# resource "aws_lb_target_group_attachment" "webapp" {
-#   target_group_arn = aws_alb_target_group.webapp-tg.arn
-#   target_id        = aws_instance.webapp.id
-#   port             = 80
-# }
